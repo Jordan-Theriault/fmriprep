@@ -195,7 +195,7 @@ def get_parser():
     g_surfs_xor.add_argument('--cifti-output', action='store_true', default=False,
                              help='output BOLD files as CIFTI dtseries')
     g_surfs_xor.add_argument('--fs-no-reconall', '--no-freesurfer',
-                             action='store_false', dest='run_reconall',
+                             action='store_true', dest='run_reconall',
                              help='disable FreeSurfer surface preprocessing.'
                              ' Note : `--no-freesurfer` is deprecated and will be removed in 1.2.'
                              ' Use `--fs-no-reconall` instead.')

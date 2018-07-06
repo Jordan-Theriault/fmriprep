@@ -226,7 +226,7 @@ def init_anat_preproc_wf(skull_strip_template, output_spaces, template, debug,
             (anat_template_wf, surface_recon_wf, [('outputnode.t1_template', 'inputnode.t1w')]),
             (skullstrip_ants_wf, surface_recon_wf, [
                 ('outputnode.out_file', 'inputnode.skullstripped_t1'),
-                ('outputnode.out_segs', 'inputnode.ants_segs'),
+                # ('outputnode.out_segs', 'inputnode.ants_segs'),
                 ('outputnode.bias_corrected', 'inputnode.corrected_t1')]),
             (skullstrip_ants_wf, applyrefined, [
                 ('outputnode.bias_corrected', 'in_file')]),
@@ -584,22 +584,38 @@ def init_skullstrip_ants_wf(skull_strip_template, debug, omp_nthreads, name='sku
         fields=['bias_corrected', 'out_file', 'out_mask', 'out_segs', 'out_report']),
         name='outputnode')
 
-    t1_skull_strip = pe.Node(
-        BrainExtraction(dimension=3, use_floatingpoint_precision=1, debug=debug,
-                        keep_temporary_files=1),
-        name='t1_skull_strip', n_procs=omp_nthreads)
+    # t1_skull_strip = pe.Node(
+    #     BrainExtraction(dimension=3, use_floatingpoint_precision=1, debug=debug,
+    #                     keep_temporary_files=1),
+    #     name='t1_skull_strip', n_procs=omp_nthreads)
+    #
+    # t1_skull_strip.inputs.brain_template = brain_template
+    # t1_skull_strip.inputs.brain_probability_mask = brain_probability_mask
+    # t1_skull_strip.inputs.extraction_registration_mask = extraction_registration_mask
 
-    t1_skull_strip.inputs.brain_template = brain_template
-    t1_skull_strip.inputs.brain_probability_mask = brain_probability_mask
-    t1_skull_strip.inputs.extraction_registration_mask = extraction_registration_mask
+    bin_dilate = pe.Node(fsl.DilateImage(),
+                        name='bin_dilate')
+    bin_dilate.inputs.operation = 'mean'
+    bin_dilate.inputs.kernel_shape = 'sphere'
+    bin_dilate.inputs.kernel_size = 5
+    bin_dilate.inputs.args = '-bin'
 
     workflow.connect([
-        (inputnode, t1_skull_strip, [('in_file', 'anatomical_image')]),
-        (t1_skull_strip, outputnode, [('BrainExtractionMask', 'out_mask'),
-                                      ('BrainExtractionBrain', 'out_file'),
-                                      ('BrainExtractionSegmentation', 'out_segs'),
-                                      ('N4Corrected0', 'bias_corrected')])
+        (inputnode, outputnode, [('in_file', 'out_file'),
+                                 ('in_file', 'bias_corrected')]),
+        (inputnode, bin_dilate, [('in_file', 'in_file')]),                         
+        (bin_dilate, outputnode, [('out_file', 'out_mask'),
+                                      # ('BrainExtractionBrain', 'out_file'),
+                                      # ('BrainExtractionSegmentation', 'out_segs'),
+                                      # ('N4Corrected0', 'bias_corrected')])
     ])
+    # workflow.connect([
+    #     (inputnode, t1_skull_strip, [('in_file', 'anatomical_image')]),
+    #     (t1_skull_strip, outputnode, [('BrainExtractionMask', 'out_mask'),
+    #                                   ('BrainExtractionBrain', 'out_file'),
+    #                                   ('BrainExtractionSegmentation', 'out_segs'),
+    #                                   ('N4Corrected0', 'bias_corrected')])
+    # ])
 
     return workflow
 
