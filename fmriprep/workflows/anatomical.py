@@ -603,12 +603,13 @@ def init_skullstrip_ants_wf(skull_strip_template, debug, omp_nthreads, name='sku
     workflow.connect([
         (inputnode, outputnode, [('in_file', 'out_file'),
                                  ('in_file', 'bias_corrected')]),
-        (inputnode, bin_dilate, [('in_file', 'in_file')]),                         
-        (bin_dilate, outputnode, [('out_file', 'out_mask'),
+        (inputnode, bin_dilate, [('in_file', 'in_file')]),
+        (bin_dilate, outputnode, [('out_file', 'out_mask')])
+        ])
                                       # ('BrainExtractionBrain', 'out_file'),
                                       # ('BrainExtractionSegmentation', 'out_segs'),
                                       # ('N4Corrected0', 'bias_corrected')])
-    ])
+    # ])
     # workflow.connect([
     #     (inputnode, t1_skull_strip, [('in_file', 'anatomical_image')]),
     #     (t1_skull_strip, outputnode, [('BrainExtractionMask', 'out_mask'),
