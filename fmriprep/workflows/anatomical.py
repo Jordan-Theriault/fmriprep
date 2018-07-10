@@ -597,7 +597,7 @@ def init_skullstrip_ants_wf(skull_strip_template, debug, omp_nthreads, name='sku
                         name='bin_dilate')
     bin_dilate.inputs.operation = 'mean'
     bin_dilate.inputs.kernel_shape = 'sphere'
-    bin_dilate.inputs.kernel_size = 5
+    bin_dilate.inputs.kernel_size = skull_kernel
     bin_dilate.inputs.args = '-bin'
 
     workflow.connect([
