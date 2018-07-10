@@ -187,6 +187,12 @@ def get_parser():
         help='Path to FreeSurfer license key file. Get it (for free) by registering'
              ' at https://surfer.nmr.mgh.harvard.edu/registration.html')
 
+    # Jordan - skull dilation kernel
+    g_7Tcustom = parser.add_argument_group('7T IASL custom options')
+    g_7Tcustom.add_argument('--skull-kernel', dest='skull_kernel',
+                        help='Xmm kernel for sphere dilation in custom skull stripping stage.',
+                        type=int)
+
     # Surface generation xor
     g_surfs = parser.add_argument_group('Surface preprocessing options')
     g_surfs.add_argument('--no-submm-recon', action='store_false', dest='hires',
@@ -495,6 +501,7 @@ def build_workflow(opts, retval):
         output_dir=output_dir,
         bids_dir=bids_dir,
         freesurfer=opts.run_reconall,
+        skull_kernel=opts.skull_kernel,
         output_spaces=output_spaces,
         template=opts.template,
         medial_surface_nan=opts.medial_surface_nan,
