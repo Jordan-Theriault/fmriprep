@@ -33,7 +33,7 @@ from .bold import init_func_preproc_wf
 def init_fmriprep_wf(subject_list, task_id, run_uuid,
                      ignore, debug, low_mem, anat_only, longitudinal, t2s_coreg,
                      omp_nthreads, skull_strip_template, work_dir, output_dir, bids_dir,
-                     freesurfer, output_spaces, template, medial_surface_nan, cifti_output, hires,
+                     freesurfer, skull_kernel, output_spaces, template, medial_surface_nan, cifti_output, hires,
                      use_bbr, bold2t1w_dof, fmap_bspline, fmap_demean, use_syn, force_syn,
                      use_aroma, ignore_aroma_err, aroma_melodic_dim, template_out_grid):
     """
@@ -65,6 +65,7 @@ def init_fmriprep_wf(subject_list, task_id, run_uuid,
                               output_dir='.',
                               bids_dir='.',
                               freesurfer=True,
+                              skull_kernel='X'
                               output_spaces=['T1w', 'fsnative',
                                             'template', 'fsaverage5'],
                               template='MNI152NLin2009cAsym',
@@ -116,6 +117,8 @@ def init_fmriprep_wf(subject_list, task_id, run_uuid,
             Root directory of BIDS dataset
         freesurfer : bool
             Enable FreeSurfer surface reconstruction (may increase runtime)
+        skull_kernel : int
+            Kernel size (mm) for binarized anat mask. fslmath spherical inflation used.
         output_spaces : list
             List of output spaces functional images are to be resampled to.
             Some parts of pipeline will only be instantiated for some output spaces.
@@ -185,6 +188,7 @@ def init_fmriprep_wf(subject_list, task_id, run_uuid,
                                                    output_dir=output_dir,
                                                    bids_dir=bids_dir,
                                                    freesurfer=freesurfer,
+                                                   kernel_size=kernel_size,
                                                    output_spaces=output_spaces,
                                                    template=template,
                                                    medial_surface_nan=medial_surface_nan,
