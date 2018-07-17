@@ -222,7 +222,7 @@ def init_fmriprep_wf(subject_list, task_id, run_uuid,
 def init_single_subject_wf(subject_id, task_id, name,
                            ignore, debug, low_mem, anat_only, longitudinal, t2s_coreg,
                            omp_nthreads, skull_strip_template, reportlets_dir, output_dir,
-                           bids_dir, freesurfer, output_spaces, template, medial_surface_nan,
+                           bids_dir, freesurfer, skull_kernel, output_spaces, template, medial_surface_nan,
                            cifti_output, hires, use_bbr, bold2t1w_dof, fmap_bspline, fmap_demean,
                            use_syn, force_syn, template_out_grid,
                            use_aroma, aroma_melodic_dim, ignore_aroma_err):
@@ -251,6 +251,7 @@ def init_single_subject_wf(subject_id, task_id, name,
                                     reportlets_dir='.',
                                     output_dir='.',
                                     bids_dir='.',
+                                    skull_kernel='X',
                                     skull_strip_template='OASIS',
                                     template='MNI152NLin2009cAsym',
                                     output_spaces=['T1w', 'fsnative',
@@ -306,6 +307,8 @@ def init_single_subject_wf(subject_id, task_id, name,
             Root directory of BIDS dataset
         freesurfer : bool
             Enable FreeSurfer surface reconstruction (may increase runtime)
+        skull_kernel : int
+            Kernel size (mm) for binarized anat mask. fslmath spherical inflation used.
         output_spaces : list
             List of output spaces functional images are to be resampled to.
             Some parts of pipeline will only be instantiated for some output spaces.
@@ -402,6 +405,7 @@ def init_single_subject_wf(subject_id, task_id, name,
     # Preprocessing of T1w (includes registration to MNI)
     anat_preproc_wf = init_anat_preproc_wf(name="anat_preproc_wf",
                                            skull_strip_template=skull_strip_template,
+                                           skull_kernel=skull_kernel,
                                            output_spaces=output_spaces,
                                            template=template,
                                            debug=debug,

@@ -51,7 +51,7 @@ from ..utils.misc import fix_multi_T1w_source_name, add_suffix
 
 
 #  pylint: disable=R0914
-def init_anat_preproc_wf(skull_strip_template, output_spaces, template, debug,
+def init_anat_preproc_wf(skull_strip_template, skull_kernel, output_spaces, template, debug,
                          freesurfer, longitudinal, omp_nthreads, hires, reportlets_dir,
                          output_dir, num_t1w,
                          name='anat_preproc_wf'):
@@ -200,6 +200,7 @@ def init_anat_preproc_wf(skull_strip_template, output_spaces, template, debug,
     skullstrip_ants_wf = init_skullstrip_ants_wf(name='skullstrip_ants_wf',
                                                  skull_strip_template=skull_strip_template,
                                                  debug=debug,
+                                                 skull_kernel=skull_kernel,
                                                  omp_nthreads=omp_nthreads)
 
     workflow.connect([
@@ -520,7 +521,7 @@ def init_anat_template_wf(longitudinal, omp_nthreads, num_t1w, name='anat_templa
     return workflow
 
 
-def init_skullstrip_ants_wf(skull_strip_template, debug, omp_nthreads, name='skullstrip_ants_wf'):
+def init_skullstrip_ants_wf(skull_strip_template, debug, skull_kernel, omp_nthreads, name='skullstrip_ants_wf'):
     r"""
     This workflow performs skull-stripping using ANTs' ``BrainExtraction.sh``
 
