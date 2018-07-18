@@ -118,7 +118,7 @@ def init_fmriprep_wf(subject_list, task_id, run_uuid,
         freesurfer : bool
             Enable FreeSurfer surface reconstruction (may increase runtime)
         skull_kernel : int
-            Kernel size (mm) for binarized anat mask. fslmath spherical inflation used.
+            Kernel size (# voxels) for binarized anat mask. fslmath spherical inflation used.
         output_spaces : list
             List of output spaces functional images are to be resampled to.
             Some parts of pipeline will only be instantiated for some output spaces.
@@ -308,7 +308,7 @@ def init_single_subject_wf(subject_id, task_id, name,
         freesurfer : bool
             Enable FreeSurfer surface reconstruction (may increase runtime)
         skull_kernel : int
-            Kernel size (mm) for binarized anat mask. fslmath spherical inflation used.
+            Kernel size (# voxels) for binarized anat mask. fslmath spherical inflation used.
         output_spaces : list
             List of output spaces functional images are to be resampled to.
             Some parts of pipeline will only be instantiated for some output spaces.

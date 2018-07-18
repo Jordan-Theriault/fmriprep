@@ -189,8 +189,8 @@ def get_parser():
 
     # Jordan - skull dilation kernel
     g_7Tcustom = parser.add_argument_group('7T IASL custom options')
-    g_7Tcustom.add_argument('--skull-kernel', dest='skull_kernel',
-                        help='Xmm kernel for sphere dilation in custom skull stripping stage.',
+    g_7Tcustom.add_argument('--skull-kernel', dest='skull_kernel', default=2,
+                        help='X-voxel kernel for sphere dilation in custom skull stripping stage. default=2',
                         type=int)
 
     # Surface generation xor
