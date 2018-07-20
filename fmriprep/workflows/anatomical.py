@@ -601,11 +601,16 @@ def init_skullstrip_ants_wf(skull_strip_template, debug, skull_kernel, omp_nthre
     bin_dilate.inputs.kernel_size = skull_kernel
     bin_dilate.inputs.args = '-bin'
 
+    mask_raw = pe.Node(fsl.ApplyMask(),
+                        name='mask_raw')
+
     workflow.connect([
-        (inputnode, outputnode, [('in_file', 'out_file'),
-                                 ('in_file', 'bias_corrected')]),
+        (inputnode, outputnode, [('in_file', 'bias_corrected')]),
         (inputnode, bin_dilate, [('in_file', 'in_file')]),
-        (bin_dilate, outputnode, [('out_file', 'out_mask')])
+        (bin_dilate, outputnode, [('out_file', 'out_mask')]),
+        (inputnode, mask_raw, [('in_file', 'in_file')]),
+        (bin_dilate, mask_raw, [('out_file', 'mask_file')]),
+        (mask_raw, outputnode, [('out_file', 'out_file')]),
         ])
                                       # ('BrainExtractionBrain', 'out_file'),
                                       # ('BrainExtractionSegmentation', 'out_segs'),
